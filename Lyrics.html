@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lyrics Synchronization</title>
+    <style>
+        .white { color: white; }
+        .red { color: red; }
+    </style>
+</head>
+<body style="background-color: black; color: white; font-family: Arial, sans-serif;">
+
+<h1>Lyrics Synchronization</h1>
+<div id="lyrics"></div>
+
+<audio id="audio" src="i_love_you_so.mp3" preload="auto"></audio>
+<button id="playButton">Play</button>
+
+<script>
+    // Key auth
+    const keyAuth = "HIZO-X109-oNeDay15zx)ZR";
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function printLyrics() {
+        const lyrics = [
+            { text: "I just need someone in my life to give it structure", delay: 75, color: "white" },
+            { text: "To handle all the selfish ways I’d spend my time without her", delay: 75, color: "white" },
+            { text: "You’re everything I want but I can’t deal with all your lovers", delay: 75, color: "white" },
+            { text: "You’re saying I’m the one but it’s your actions that speak louder", delay: 75, color: "white" },
+            { text: "Giving me love when you are down and need another", delay: 75, color: "white" },
+            { text: "I’ve got to get away and let you go, I’ve got to get over", delay: 75, color: "white" },
+            { text: "But I love you so", delay: 230, color: "red" },
+            { text: "I love you so", delay: 230, color: "red" },
+            { text: "I love you so", delay: 230, color: "red" },
+            { text: "I love you so", delay: 230, color: "red" },
+            { text: "I’m gonna pack my things and leave you behind", delay: 100, color: "white" },
+            { text: "This feeling’s old and I know that I’ve made up my mind", delay: 100, color: "white" },
+            { text: "I hope you feel what I felt when you shattered my soul", delay: 100, color: "white" },
+            { text: "Cuz you were cruel and I’m a fool so please let me go", delay: 100, color: "white" },
+            { text: "But I love you so (please let me go)", delay: 200, color: "red" },
+            { text: "I love you so (please let me go)", delay: 200, color: "red" },
+            { text: "I love you so (please let me go)", delay: 200, color: "red" },
+            { text: "I love you so (please let me go)", delay: 200, color: "red" }
+        ];
+
+        const delaysBetweenLines = [2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000, 2000];
+
+        const lyricsDiv = document.getElementById('lyrics');
+
+        for (let i = 0; i < lyrics.length; i++) {
+            const line = lyrics[i];
+            for (let char of line.text) {
+                const span = document.createElement('span');
+                span.textContent = char;
+                span.className = line.color;
+                lyricsDiv.appendChild(span);
+                await sleep(line.delay);
+            }
+            const br = document.createElement('br');
+            lyricsDiv.appendChild(br);
+            if (i < delaysBetweenLines.length) {
+                await sleep(delaysBetweenLines[i]);
+            }
+        }
+    }
+
+    async function main() {
+        const audio = document.getElementById('audio');
+
+        // ตรวจสอบว่าการโหลดเพลงเสร็จสมบูรณ์หรือไม่
+        audio.oncanplaythrough = () => {
+            console.log("Audio is ready to play.");
+        };
+
+        audio.onerror = (e) => {
+            console.error("Error loading audio file:", e);
+        };
+
+        // Delay for 13 seconds before printing lyrics
+        const countdownDiv = document.createElement('div');
+        countdownDiv.textContent = "Starting in ";
+        document.body.appendChild(countdownDiv);
+        for (let i = 13; i > 0; i--) {
+            countdownDiv.textContent = `Starting in ${i}...`;
+            await sleep(1000);
+        }
+        countdownDiv.textContent = "GO!";
+        await sleep(1000);
+        document.body.removeChild(countdownDiv);
+
+        // Print lyrics after the countdown
+        await printLyrics();
+    }
+
+    document.getElementById('playButton').addEventListener('click', () => {
+        const audio = document.getElementById('audio');
+        audio.play().then(() => {
+            main();
+        }).catch((error) => {
+            console.error("Error playing audio:", error);
+        });
+    });
+</script>
+</body>
+</html>
